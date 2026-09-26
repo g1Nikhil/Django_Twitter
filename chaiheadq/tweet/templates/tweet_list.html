@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}Tweets{% endblock %}
+
+{% block content %}
+<header class="tweet-page-header">
+    <h1>Tweets</h1>
+    <a class="tweet-create-link" href="{% url 'tweet_create' %}">＋ Create tweet</a>
+</header>
+
+<section class="tweet-list" aria-label="Recent tweets">
+{% for tweet in tweets %}
+    <article class="tweet-card">
+        <header class="tweet-card-header">
+            <span class="tweet-avatar" aria-hidden="true">{{ tweet.user.username|first }}</span>
+            <div>
+                <p class="tweet-author">{{ tweet.user.username }}</p>
+                <p class="tweet-date"><time datetime="{{ tweet.created_at|date:'c' }}">{{ tweet.created_at|date:"M j, Y · H:i" }}</time></p>
+            </div>
+        </header>
+        <p class="tweet-text">{{ tweet.text|linebreaksbr }}</p>
+        {% if tweet.photo %}
+            <img class="tweet-photo" src="{{ tweet.photo.url }}" alt="Photo attached to tweet" loading="lazy">
+        {% endif %}
+        {% if user.is_authenticated and user == tweet.user %}
+            <footer class="tweet-card-actions">
+                <a class="tweet-action" href="{% url 'tweet_edit' tweet.id %}">Edit</a>
+                <a class="tweet-action tweet-action-delete" href="{% url 'tweet_delete' tweet.id %}">Delete</a>
+            </footer>
+        {% endif %}
+    </article>
+{% empty %}
+    <p class="tweet-empty">No tweets yet. Create the first one!</p>
+{% endfor %}
+</section>
+{% endblock %}
