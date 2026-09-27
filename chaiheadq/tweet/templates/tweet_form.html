@@ -3,11 +3,18 @@
 {% block title %}{{ action }} tweet{% endblock %}
 
 {% block content %}
-<h1>{{ action }} tweet</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{{ action }} tweet</button>
-    <a href="{% url 'tweet_list' %}">Cancel</a>
-</form>
+<section class="editor-page">
+    <header class="editor-heading">
+        <p class="feed-eyebrow">Make it yours</p>
+        <h1>{{ action }} a post</h1>
+    </header>
+    <form class="editor-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button class="button-primary" type="submit">{{ action }} post</button>
+            <a class="button-secondary" href="{% url 'tweet_list' %}">Cancel</a>
+        </div>
+    </form>
+</section>
 {% endblock %}

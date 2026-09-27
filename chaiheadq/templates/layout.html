@@ -401,6 +401,8 @@
             }
         }
     </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tweet/app.css' %}">
     <title>
         {% block title %}
         Chai aur Django
@@ -410,41 +412,41 @@
 <body>
     <nav class="site-navbar">
         <div class="site-nav-inner">
-            <a class="site-brand" href="{% url 'index' %}">Tweetbar</a>
+            <a class="site-brand" href="{% url 'tweet_list' %}">
+                <span class="brand-mark" aria-hidden="true">t</span> Tweetbar
+            </a>
             <button class="site-navbar-toggle" type="button" aria-controls="mainNavbar"
                     aria-expanded="false" aria-label="Toggle navigation">
-                ☰
+                <span aria-hidden="true">&#9776;</span>
             </button>
 
             <div class="site-nav-collapse" id="mainNavbar">
                 <ul class="site-nav-list">
                     <li>
-                        <a class="site-nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                        <a class="site-nav-link" href="{% url 'tweet_list' %}">Feed</a>
                     </li>
-                    <li>
-                        <a class="site-nav-link" href="#">Link</a>
-                    </li>
-                    <li class="site-dropdown">
-                        <a class="site-nav-link site-dropdown-toggle" href="#" role="button"
-                           aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="site-dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><hr></li>
-                            <li><a href="#">Something else</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <span class="site-nav-link disabled" aria-disabled="true">Disabled</span>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li><a class="site-nav-link nav-compose" href="{% url 'tweet_create' %}">Write a post</a></li>
+                    {% else %}
+                        <li><a class="site-nav-link" href="{% url 'register' %}">Join</a></li>
+                    {% endif %}
                 </ul>
-                <form class="site-search" role="search" method="get">
-                    <input type="search" placeholder="Search"
-                           aria-label="Search" name="q">
+                <form class="site-search" role="search" method="get" action="{% url 'tweet_list' %}">
+                    <input type="search" placeholder="Search posts or people"
+                           aria-label="Search posts or people" name="q" value="{{ search_query }}">
                     <button type="submit">Search</button>
                 </form>
+                <div class="nav-account">
+                    {% if user.is_authenticated %}
+                        <span class="nav-username">{{ user.username }}</span>
+                        <form class="nav-logout-form" method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button class="nav-logout" type="submit">Log out</button>
+                        </form>
+                    {% else %}
+                        <a class="site-nav-link" href="{% url 'login' %}">Log in</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
@@ -457,18 +459,9 @@
     <script>
         const navbarToggle = document.querySelector('.site-navbar-toggle');
         const navbarMenu = document.querySelector('#mainNavbar');
-        const dropdownToggle = document.querySelector('.site-dropdown-toggle');
-        const dropdown = document.querySelector('.site-dropdown');
-
         navbarToggle.addEventListener('click', () => {
             const isOpen = navbarMenu.classList.toggle('is-open');
             navbarToggle.setAttribute('aria-expanded', isOpen);
-        });
-
-        dropdownToggle.addEventListener('click', (event) => {
-            event.preventDefault();
-            const isOpen = dropdown.classList.toggle('is-open');
-            dropdownToggle.setAttribute('aria-expanded', isOpen);
         });
     </script>
 </body>

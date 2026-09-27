@@ -3,12 +3,14 @@
 {% block title %}Delete tweet{% endblock %}
 
 {% block content %}
-<h1>Delete tweet</h1>
-<p>Are you sure you want to delete this tweet?</p>
-<blockquote>{{ tweet.text }}</blockquote>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Delete</button>
-    <a href="{% url 'tweet_list' %}">Cancel</a>
-</form>
+<section class="confirm-page">
+    <p class="feed-eyebrow">One last check</p>
+    <h1>Delete this post?</h1>
+    <blockquote>{{ tweet.text }}</blockquote>
+    <form method="post">
+        {% csrf_token %}
+        <button class="button-danger" type="submit">Delete post</button>
+        <a class="button-secondary" href="{% url 'tweet_list' %}">Keep post</a>
+    </form>
+</section>
 {% endblock %}

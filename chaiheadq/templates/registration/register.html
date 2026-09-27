@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %}Create account | Tweetbar{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+	<h1>Create account</h1>
+	<form method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button class="button-primary" type="submit">Register</button>
+	</form>
+	<p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
+</section>
+{% endblock %}
